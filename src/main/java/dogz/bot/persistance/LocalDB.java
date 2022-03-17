@@ -1,20 +1,21 @@
 package dogz.bot.persistance;
 
+import dogz.bot.commands.EventAdventiser;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class LocalDB implements IDataBase{
-    private Map<String,String> buttonsID;
-    private HashSet<String> eventChannelID;
+    private final Map<String,String> buttonsID;
+    private final HashSet<String> eventChannelID;
+    private final LinkedList<EventAdventiser.EventParameter> eventParameters;
 
     private static final Logger LOG = LogManager.getLogger("DBLogger");
 
-    LocalDB(){
+    public LocalDB(){
+        eventParameters = new LinkedList<>();
         buttonsID = new TreeMap<>();
         eventChannelID = new HashSet<>();
     }
@@ -41,5 +42,15 @@ public class LocalDB implements IDataBase{
     @Override
     public HashSet<String> loadEventChannel() {
         return eventChannelID;
+    }
+
+    @Override
+    public void saveEventParameter(EventAdventiser.EventParameter parameter) {
+        eventParameters.add(parameter);
+    }
+
+    @Override
+    public List<EventAdventiser.EventParameter> loadEventParameter() {
+        return eventParameters;
     }
 }
