@@ -13,6 +13,7 @@ import dogz.bot.commands.pattern.MessageEmbedInformationPattern;
 import dogz.bot.events.DiscordEvent;
 import dogz.bot.events.EvenementChatMessage;
 import dogz.bot.events.IEventEvenementCreation;
+import dogz.bot.persistance.IDataBase;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ public class DiscordShell {
 
     private final Map<String, ICommand> commands = new HashMap<>();
     private final HashSet<IEventEvenementCreation> events = new HashSet<>();
+    private IDataBase db;
 
     private DiscordShell(){
         loadCommand();
@@ -54,6 +56,10 @@ public class DiscordShell {
 
     private void loadEvent(){
         addEvent(new EvenementChatMessage());
+    }
+
+    public void setDb(IDataBase dataBase){
+        db = dataBase;
     }
 
     public void read(Event event) {
