@@ -1,6 +1,8 @@
 package dogz.bot.commands;
 
+import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClient;
+import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.entity.channel.MessageChannel;
@@ -65,7 +67,7 @@ public class EventAdventiser extends Command implements ICommand{
                     print(MessageEmbedInformationPattern.standartInformation(BotMessages.EventMessages.CHANNEL_ADDED),channel);
                     break;
                 case "-print":
-                    print();
+                    print(Objects.requireNonNull(channel.block()).getClient());
                     break;
                 case "-list":
                     print(MessageEmbedInformationPattern.channelList(messageChannels),channel);
@@ -84,7 +86,7 @@ public class EventAdventiser extends Command implements ICommand{
                 .subscribe();
     }
 
-    private void print(){
+    private void print(GatewayDiscordClient client){
         EmbedCreateSpec embed = EmbedCreateSpec.builder()
                 .build();
 
@@ -92,7 +94,10 @@ public class EventAdventiser extends Command implements ICommand{
         messageChannels = new HashSet<>();
         for (String id : db.loadEventChannel())
         {
-
+            client.getChannelById(Snowflake.of(id))
+                    .ofType(GuildMessageChannel.class)
+                    .flatMap(chanel -> chanel.createMessage(embed))
+                    .block();
         }
 
         for(Mono<MessageChannel> channel : messageChannels){
