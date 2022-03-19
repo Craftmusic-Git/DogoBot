@@ -54,7 +54,21 @@ class LocalDBTest {
     @Test
     void loadButtonID() {
         loadButtonData();
-        TreeMap<String,String> map = (TreeMap)sut.loadButtonID();
+        TreeMap<String,String> map = buttonsDataSetInit();
+        for(Map.Entry<String,String> entry : map.entrySet()){
+            assertTrue(sut.loadButtonID().containsKey(entry.getKey()));
+        }
+    }
+
+    @Test
+    void saveButtonIDDouble(){
+        loadButtonData();
+        TreeMap<String,String> map = buttonsDataSetInit();
+        for (Map.Entry<String,String> entry : map.entrySet()){
+            sut.saveButtonID(entry.getKey(), entry.getValue());
+            assertTrue(sut.loadButtonID().containsKey(entry.getKey()));
+        }
+        assertEquals(sut.loadButtonID().size(),map.size());
     }
 
     @Test
